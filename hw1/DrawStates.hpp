@@ -11,15 +11,18 @@ public:
     else {
       draw_objects.push_back(obj);
     }
+    glutPostRedisplay();
     is_changed = true;
   }
   void addTmpObject(DrawObject* obj) {
     tmp_object = obj;
+    glutPostRedisplay();
     is_changed = true;
   }
   void clear() {
     draw_objects.clear();
     is_changed = true;
+    glutPostRedisplay();
   }
   void display() {
     glClear(GL_COLOR_BUFFER_BIT);

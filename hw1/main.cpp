@@ -362,14 +362,14 @@ void initData() {
 }
 
 void display() {
-  //draw_state_presistence.display();
+  draw_state_presistence.display();
 }
 
 void idleCallback() {
-  if(is_changed) {
-    draw_state_presistence.display();
-    is_changed = false;
-  }
+  // if(is_changed) {
+  //   draw_state_presistence.display();
+  //   is_changed = false;
+  // }
 }
 
 void windowReshape(int _new_width, int _new_height) {
