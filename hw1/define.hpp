@@ -6,8 +6,9 @@
 #include <cmath>
 #include <functional>
 #include <fstream>
-#include <Gl/glut.h>
+#include <GL/glut.h>
 #include <GL/glext.h>
+#include <GL/freeglut.h>
 
 typedef int menu_id;
 
@@ -23,7 +24,7 @@ float point_size = 1.0;
 bool is_full_mode = false;
 bool is_insert_mode = false;
 bool is_full_screen = false;
-bool is_changed = false;
+bool is_changed = true;
 bool is_mouse_down = false;
 
 bool is_open_file_menu = false;

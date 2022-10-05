@@ -1,5 +1,4 @@
 #include "define.hpp"
-#include <GL/freeglut.h>
 
 void mouseCallback(int button, int state, int x, int y) {
   y = window_height - y;
@@ -365,10 +364,8 @@ void initData() {
 }
 
 void display() {
-  draw_state_presistence.display();
+  //draw_state_presistence.display();
 }
-
-int t = 0;
 
 void idleCallback() {
   if(is_changed) {
@@ -444,12 +441,6 @@ void keyboardEvent(unsigned char key, int x, int y) {
   }
 }
 
-int s, s2;
-
-void test() {
-  glutDestroyWindow(s2);
-}
-
 int main(int argc, char* argv[]) {
   glutInit(&argc, argv);
 
@@ -460,7 +451,7 @@ int main(int argc, char* argv[]) {
   
   initData();
 
-  s = glutCreateWindow("Drawing Panel");
+  glutCreateWindow("Drawing Panel");
 
   glutDisplayFunc(display);
   glutReshapeFunc(windowReshape);
@@ -469,7 +460,6 @@ int main(int argc, char* argv[]) {
   glutMouseFunc(mouseCallback);
   glutMotionFunc(motionCallback);  
   glutPassiveMotionFunc(passiveMotionCallback);
-  glutCloseFunc(test);
 
   createMenu();
 
