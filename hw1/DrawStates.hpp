@@ -81,8 +81,7 @@ public:
     }
   }
   void display() {
-    //presistence[version].display();
-    is_changed = true;
+    presistence[version].display();
   }
   void undo() {
     if(version > 0) {

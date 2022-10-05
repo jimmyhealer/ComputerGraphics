@@ -13,18 +13,15 @@ public:
   void update(std::string str_) {
     str = str_;
     is_changed = true;
-    // draw_state_presistence.display();
   }
   void add(char c) {
     str += c;
     is_changed = true;
-    // draw_state_presistence.display();
   }
   void del() {
     if(str.size() > 0) {
       str.pop_back();
       is_changed = true;
-      // draw_state_presistence.display();
     }
   }
   void exit() {

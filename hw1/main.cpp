@@ -6,7 +6,8 @@ void mouseCallback(int button, int state, int x, int y) {
 
   // if(state == GLUT_DOWN)
   //   NavBarPlane->isClickItem(x, y);
-  leftNavPlane->isClickItem(x, y);
+  if(!paint_board->isInside(x, y) && state == GLUT_DOWN)
+    leftNavPlane->isClickItem(x, y);
 
   if(draw_mode != DRAW_MODE::NONE && state == GLUT_DOWN && paint_board->isInside(x, y)) {
     pos_x = x, pos_y = y;
@@ -357,10 +358,7 @@ void initData() {
     0.0, window_height - 90, window_width, 45, RGBAColor(204.0 / 255,  204.0 / 255,  204.0 / 255,  1.0));
   draw_state_presistence.add(ToolBarPlane, true);
 
-
-  // IconObject *icon = new IconObject(10.0, window_height - 90, 30.0, 30.0,
-  //  "assets/icons/triangle.bmp", RGBAColor(COLOR::WHITE));
-  // draw_state_presistence.add(icon, true);
+  is_changed = true;
 }
 
 void display() {
@@ -444,7 +442,10 @@ void keyboardEvent(unsigned char key, int x, int y) {
 int main(int argc, char* argv[]) {
   glutInit(&argc, argv);
 
-  glutInitWindowPosition(50, 50);
+  window_width = glutGet(GLUT_SCREEN_WIDTH);
+  window_height = glutGet(GLUT_SCREEN_HEIGHT) - 71;
+
+  glutInitWindowPosition(0, 0);
   glutInitWindowSize(window_width, window_height);
 
   glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
@@ -459,7 +460,7 @@ int main(int argc, char* argv[]) {
   glutKeyboardFunc(keyboardEvent);
   glutMouseFunc(mouseCallback);
   glutMotionFunc(motionCallback);  
-  glutPassiveMotionFunc(passiveMotionCallback);
+  // glutPassiveMotionFunc(passiveMotionCallback);
 
   createMenu();
 

@@ -18,7 +18,6 @@ public:
   void draw() override {
     glColor3f(color.r, color.g, color.b);
     glLineWidth(line_width);
-    // glBegin(GL_LINE_LOOP);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glBegin(GL_POLYGON);
     glVertex2f(x, y);
