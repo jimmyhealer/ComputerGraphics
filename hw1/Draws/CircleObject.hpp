@@ -24,7 +24,7 @@ public:
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glPushMatrix();
     glTranslatef(x, y, 0.0);
-    gluDisk(quadric, 0.0, radius, 100, 100);
+    gluDisk(quadric, radius - 1, radius, 50, 1);
     glPopMatrix();
   }
 };
