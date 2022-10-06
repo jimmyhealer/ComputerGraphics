@@ -1,30 +1,25 @@
 #include "define.hpp"
 
-DrawObject *tmp;
+TriangleObject *tmp;
 
+int t = 0;
 void mouseCallback(int button, int state, int x, int y) {
   y = window_height - y;
   if(button != GLUT_LEFT_BUTTON) return;
   if(state == GLUT_DOWN) {
-    pos_x = x, pos_y = y;
-    is_mouse_down = true;
+    tmp = new TriangleObject(x, y);
   }
   else if(state == GLUT_UP && is_mouse_down == 1) {
-    is_mouse_down = false;
     draw_state.add(tmp);
+    t = 0;
   }
 }
 
 void motionCallback(int x, int y) {
   y = window_height - y;
-  if(is_mouse_down) {
-    tmp = new TriangleObject(
-        pos_x, pos_y,
-        2 * pos_x - x, y,
-        x, y,
-        line_width,
-        RGBAColor(now_color)
-      );
+  static int tt = 0;
+  if(t == 1) {
+    tmp->set(x, y);
     draw_state.addTmpObject(tmp);
   }
 }
@@ -58,8 +53,8 @@ void windowReshape(int _new_width, int _new_height) {
 int main(int argc, char* argv[]) {
   glutInit(&argc, argv);
 
-  window_width = glutGet(GLUT_SCREEN_WIDTH);
-  window_height = glutGet(GLUT_SCREEN_HEIGHT) - 71;
+  //window_width = glutGet(GLUT_SCREEN_WIDTH);
+  //window_height = glutGet(GLUT_SCREEN_HEIGHT) - 71;
 
   glutInitWindowPosition(0, 0);
   glutInitWindowSize(window_width, window_height);

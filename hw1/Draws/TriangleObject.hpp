@@ -4,7 +4,9 @@ protected:
   float line_width;
   RGBAColor color;
 public:
-  TriangleObject() {}
+  TriangleObject(float x, float y) {
+    this->x = x, this->y = y;
+  }
   TriangleObject(
     float x_, float y_,
     float x2_, float y2_,
@@ -14,6 +16,10 @@ public:
     x2 = x2_, y2 = y2_, x3 = x3_, y3 = y3_;
     color = color_;
     line_width = line_width_;
+  }
+  void set(int x_, int y_) {
+    x2 = 2 * x - x_, y2 = y_;
+    x3 = x_, y3 = y_;
   }
   void draw() override {
     glColor3f(color.r, color.g, color.b);

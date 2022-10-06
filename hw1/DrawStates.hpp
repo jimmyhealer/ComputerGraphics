@@ -13,6 +13,8 @@ public:
   }
   void display() {
     glClearColor(1,1,1,1);
+    static int times = 0;
+    std::cerr << "times " << times++ << '\n'; 
     glClear(GL_COLOR_BUFFER_BIT);
     for(DrawObject* obj : draw_objects) {
       obj->draw();
