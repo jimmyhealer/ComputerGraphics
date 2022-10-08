@@ -29,7 +29,7 @@ int window_height = 512;
 int window_width = 512;
 int draw_mode = DRAW_MODE::NONE;
 int g_now_color = COLOR::BLUE;
-float g_line_width = 8.0;
+float g_line_width = 1.0;
 float g_point_size = 1.0;
 bool is_full_mode = false;
 bool is_insert_mode = false;
@@ -53,9 +53,8 @@ std::string more_menu_str[] = {"Clear", "Quit", "Fill Mode"};
 #include "DrawStates.hpp"
 #include "UI/UIType.hpp"
 
-StringObject *str_draw_mode, *str_now_color, *str_line_width, *str_point_size, *insert_str;
-PaintBoardObject *paint_board;
-PlaneObject *leftNavPlane, *rightNavPlane, *NavBarPlane, *ToolBarPlane, *fileMenuPlane;
+StringObject *insert_str;
+PlaneObject *leftNavPlane, *rightNavPlane, *NavBarPlane, *ToolBarPlane;
 PolygonObject *polygon = nullptr;
 
 menu_id top_menu, draw_menu, color_menu, line_width_menu, point_size_menu, more_menu;
@@ -63,3 +62,5 @@ menu_id top_menu, draw_menu, color_menu, line_width_menu, point_size_menu, more_
 DrawStatePresistence draw_state_presistence;
 
 DrawObject *now_draw_object = nullptr;
+
+TextObject *text_line_width;
