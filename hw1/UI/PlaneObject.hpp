@@ -1,7 +1,7 @@
 class PlaneObject : public UIObject {
 private:
   std::vector<ButtonObject*> item_objects;
-  int item_is_clicked;
+  int item_is_clicked = -1;
 public:
   PlaneObject() {};
   PlaneObject(
@@ -59,6 +59,7 @@ public:
         return true;
       }
     }
+    item_is_clicked = -1;
     return false;
   }
   bool isInsideItem(int x_, int y_) {

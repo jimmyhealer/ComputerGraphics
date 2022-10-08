@@ -66,8 +66,8 @@ public:
   }
   void click() {
     if (isEnabled()) {
-      is_changed = true;
       callback(this);
+      is_changed = true;
     }
   }
   void setIsClicked(int is_clicked_) {
