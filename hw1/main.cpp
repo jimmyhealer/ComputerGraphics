@@ -4,132 +4,67 @@ void mouseCallback(int button, int state, int x, int y) {
   y = window_height - y;
   if(button != GLUT_LEFT_BUTTON) return;
 
-  // if(state == GLUT_DOWN)
-  //   NavBarPlane->isClickItem(x, y);
-  if(!paint_board->isInside(x, y) && state == GLUT_DOWN)
+  if(state == GLUT_DOWN)
+    NavBarPlane->isClickItem(x, y);
+  if(!PaintBoard::isInside(x, y) && state == GLUT_DOWN)
     leftNavPlane->isClickItem(x, y);
 
-  if(draw_mode != DRAW_MODE::NONE && state == GLUT_DOWN && paint_board->isInside(x, y)) {
-    pos_x = x, pos_y = y;
-    is_mouse_down = 1;
-  }
-  else if(state == GLUT_UP && is_mouse_down == 1) {
-    is_changed = true;
-    is_mouse_down = false;
-    std::pair<float, float> pos, pos2;
-    pos = paint_board->getCanDrawRange(x, y);
+  if(draw_mode != DRAW_MODE::NONE && state == GLUT_DOWN && PaintBoard::isInside(x, y)) {
+    is_motion = false;
     switch(draw_mode) {
       case DRAW_MODE::LINE:
-        draw_state_presistence.add(
-          new LineObject(
-            pos_x, pos_y,
-            pos.first, pos.second,
-            line_width,
-            RGBAColor(now_color)
-          ), false
-        );
+        now_draw_object = new LineObject(x, y);
         break;
       case DRAW_MODE::CIRCLE:
-        draw_state_presistence.add(
-          new CircleObject(
-            pos_x, pos_y,
-            paint_board->getCanDrawRange(
-              pos_x, pos_y, sqrt(pow(pos_x - pos.first, 2) + pow(pos_y - pos.second, 2))
-            ),
-            line_width,
-            RGBAColor(now_color)
-          ), false
-        );
+        now_draw_object = new CircleObject(x, y);
         break;
       case DRAW_MODE::TRIANGLE:
-        pos2 = paint_board->getCanDrawRange(2 * pos_x - pos.first, pos.second);
-        draw_state_presistence.add(
-          new TriangleObject(
-            pos_x, pos_y,
-            2 * pos_x - pos2.first, pos.second,
-            pos2.first, pos2.second,
-            line_width,
-            RGBAColor(now_color)
-          ), false
-        );
+        now_draw_object = new TriangleObject(x, y);
         break;
       case DRAW_MODE::POLYGON:
         if(polygon == nullptr) {
-          polygon = new PolygonObject(pos_x, pos_y, line_width, RGBAColor(now_color));
-          draw_state_presistence.add(polygon, false);
-        }
-        else if(!polygon->checkClosed(pos_x, pos_y)) {
-          polygon->add(pos_x, pos_y);
-        }
+          polygon = new PolygonObject(x, y);
+          draw_state_presistence.add(polygon);
+        } 
         else {
-          polygon->add(pos_x, pos_y, true);
-          polygon = nullptr;
+          polygon->addPoint(x, y);
+          if(polygon->isClosed()) {
+            polygon = nullptr;
+          }
         }
-        break;
+        break;   
       case DRAW_MODE::TEXT:
-        if(is_insert_mode == 1) break;
+        if(is_insert_mode) break;
         is_insert_mode = 1;
-        insert_str = new StringObject(
-          pos_x, pos_y,
-          GLUT_BITMAP_HELVETICA_18,
-          "",
-          RGBAColor(now_color)
-        );
+        insert_str = new StringObject(x, y);
         draw_state_presistence.add(insert_str);
-        break;
-      default:
-        break;
+        break;     
+    }
+  }
+  else if(state == GLUT_UP && now_draw_object != nullptr) {
+    if(draw_mode != DRAW_MODE::POLYGON && draw_mode != DRAW_MODE::TEXT && is_motion) {
+      draw_state_presistence.add(now_draw_object);
+      now_draw_object = nullptr;
     }
   }
 }
 
 void motionCallback(int x, int y) {
   y = window_height - y;
-  std::pair<float, float> pos = paint_board->getCanDrawRange(x, y), pos2;
-  if(is_mouse_down) {
-    switch(draw_mode) {
-      case DRAW_MODE::LINE:
-        draw_state_presistence.addTmpObject(
-          new LineObject(
-            pos_x, pos_y,
-            pos.first, pos.second,
-            line_width,
-            RGBAColor(now_color)
-          )
-        );
-        break;
-      case DRAW_MODE::CIRCLE:
-        draw_state_presistence.addTmpObject(
-          new CircleObject(
-            pos_x, pos_y,
-            paint_board->getCanDrawRange(
-              pos_x, pos_y, sqrt(pow(pos_x - pos.first, 2) + pow(pos_y - pos.second, 2))
-            ),
-            line_width,
-            RGBAColor(now_color)
-          )
-        );
-        break;
-      case DRAW_MODE::TRIANGLE:
-        pos2 = paint_board->getCanDrawRange(2 * pos_x - pos.first, pos.second);
-        draw_state_presistence.addTmpObject(
-          new TriangleObject(
-            pos_x, pos_y,
-            2 * pos_x - pos2.first, pos.second,
-            pos2.first, pos2.second,
-            line_width,
-            RGBAColor(now_color)
-          )
-        );
-        break;
-    }
+  std::pair<float, float> pos = PaintBoard::getCanDrawRange(x, y);
+  if(now_draw_object != nullptr && 
+    draw_mode != DRAW_MODE::POLYGON &&
+    draw_mode != DRAW_MODE::TEXT) {
+    is_motion = true;
+    now_draw_object->addPoint(pos.first, pos.second);
+    draw_state_presistence.addTmpObject(now_draw_object);
   }
 }
 
 void passiveMotionCallback(int x, int y) {
   y = window_height - y;
   if(abs(x - pos_x) + abs(y - pos_y) < 4) return;
-  if(paint_board->isInside(x, y) && draw_mode != DRAW_MODE::NONE) {
+  if(PaintBoard::isInside(x, y) && draw_mode != DRAW_MODE::NONE) {
     if(draw_mode == DRAW_MODE::TEXT) {
       glutSetCursor(GLUT_CURSOR_TEXT);
     }
@@ -148,22 +83,18 @@ void passiveMotionCallback(int x, int y) {
 
 void drawMenuCallback(int value) {
   draw_mode = value;
-  // str_draw_mode->update("Draw Mode: " + draw_mode_str[draw_mode]);
 }
 
 void colorMenuCallback(int value) {
-  now_color = value;
-  // str_now_color->update("Now Color: " + color_str[now_color]);
+  g_now_color = value;
 }
 
 void lineWidthMenuCallback(int value) {
-  line_width = value;
-  // str_line_width->update("Line Width: " + std::to_string((int)line_width));
+  g_line_width = value;
 }
 
 void pointSizeMenuCallback(int value) {
-  point_size = value;
-  // str_point_size->update("Point Size: " + std::to_string((int)point_size));
+  g_point_size = value;
 }
 
 void moreMenuCallback(int value) {
@@ -232,21 +163,9 @@ void initData() {
 
   void *font = GLUT_BITMAP_HELVETICA_18;
 
-  paint_board = new PaintBoardObject(120.0, 0.0, window_width, window_height);
-  draw_state_presistence.add(paint_board, true);
-
-  // str_draw_mode = new StringObject(10.0, 10.0, font, "Draw Mode: " + draw_mode_str[draw_mode], RGBAColor(COLOR::BLUE));
-  // draw_state_presistence.add(str_draw_mode, true);
-  
-  // str_now_color = new StringObject(10.0, 30.0, font, "Now Color: " + color_str[now_color], RGBAColor(COLOR::BLUE));
-  // draw_state_presistence.add(str_now_color, true);
-
-  // str_line_width = new StringObject(10.0, 50.0, font, "Line Width: " + std::to_string((int)line_width), RGBAColor(COLOR::BLUE));
-  // draw_state_presistence.add(str_line_width, true);
-
-  // str_point_size = new StringObject(10.0, 70.0, font, "Point Size: " + std::to_string((int)point_size), RGBAColor(COLOR::BLUE));
-  // draw_state_presistence.add(str_point_size, true);
-
+  // paint_board = new PaintBoardObject(120.0, 0.0, window_width, window_height);
+  // draw_state_presistence.addPaintBoardObject(paint_board);
+  // draw_state_presistence.add(paint_board);
 
   leftNavPlane = new PlaneObject(
     0.0, 0.0, 120.0, window_height - 90, RGBAColor(204.0 / 255,  204.0 / 255,  204.0 / 255,  1.0));
@@ -262,7 +181,8 @@ void initData() {
         [&](ButtonObject *self) -> void {
           draw_mode = DRAW_MODE::LINE;
         },
-        RGBAColor(COLOR::BLUE)
+        RGBAColor(COLOR::BLUE),
+        RGBAColor(COLOR::BLACK)
       )
     );
 
@@ -273,7 +193,8 @@ void initData() {
         [](ButtonObject *self) -> void {
           draw_mode = DRAW_MODE::CIRCLE;
         },
-        RGBAColor(COLOR::BLUE)
+        RGBAColor(COLOR::BLUE),
+        RGBAColor(COLOR::BLACK)
       )
     );
 
@@ -284,7 +205,8 @@ void initData() {
         [](ButtonObject *self) -> void {
           draw_mode = DRAW_MODE::TRIANGLE;
         },
-        RGBAColor(COLOR::BLUE)
+        RGBAColor(COLOR::BLUE),
+        RGBAColor(COLOR::BLACK)
       )
     );
 
@@ -295,7 +217,8 @@ void initData() {
         [](ButtonObject *self) -> void {
           draw_mode = DRAW_MODE::POLYGON;
         },
-        RGBAColor(COLOR::BLUE)
+        RGBAColor(COLOR::BLUE),
+        RGBAColor(COLOR::BLACK)
       )
     );
 
@@ -306,7 +229,8 @@ void initData() {
         [](ButtonObject *self) -> void {
           draw_mode = DRAW_MODE::TEXT;
         },
-        RGBAColor(COLOR::BLUE)
+        RGBAColor(COLOR::BLUE),
+        RGBAColor(COLOR::BLACK)
       )
     );
 
@@ -317,10 +241,12 @@ void initData() {
         [](ButtonObject *self) -> void {
           draw_mode = DRAW_MODE::NONE;
         },
-        RGBAColor(COLOR::BLUE)
+        RGBAColor(COLOR::BLUE),
+        RGBAColor(COLOR::BLACK)
       ), true
     );
   }
+
 
   NavBarPlane = new PlaneObject(
     0.0, window_height - 45, window_width, 45, RGBAColor(80.0 / 255,  80.0 / 255,  80.0 / 255,  1.0));
@@ -366,10 +292,10 @@ void display() {
 }
 
 void idleCallback() {
-  // if(is_changed) {
-  //   draw_state_presistence.display();
-  //   is_changed = false;
-  // }
+  if (is_changed) {
+    glutPostRedisplay();
+    is_changed = false;
+  }
 }
 
 void windowReshape(int _new_width, int _new_height) {
@@ -385,7 +311,7 @@ void windowReshape(int _new_width, int _new_height) {
   gluOrtho2D(0, _new_width, 0, _new_height);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
-  paint_board->update(window_width, window_height);
+  PaintBoard::update(window_width, window_height);
   leftNavPlane->update(120.0, window_height - 90);
   NavBarPlane->update(0.0, window_height - 45, window_width, 45);
   ToolBarPlane->update(0.0, window_height - 90, window_width, 45);
@@ -460,7 +386,7 @@ int main(int argc, char* argv[]) {
   glutKeyboardFunc(keyboardEvent);
   glutMouseFunc(mouseCallback);
   glutMotionFunc(motionCallback);  
-  // glutPassiveMotionFunc(passiveMotionCallback);
+  glutPassiveMotionFunc(passiveMotionCallback);
 
   createMenu();
 

@@ -42,4 +42,5 @@ public:
     glVertex2f(x, y + height);
     glEnd();
   }
+  void addPoint(float x, float y) override {}
 };

@@ -2,29 +2,29 @@ class CircleObject : public DrawObject {
 protected:
   float radius;
   float line_width;
+  int full_mode;
   RGBAColor color;
   GLUquadricObj *quadric = nullptr;
 public:
-  CircleObject() {}
-  CircleObject(
-    float x_, float y_,
-    float radius_,
-    float line_width_,
-    RGBAColor color_) : DrawObject(x_, y_) {
-    radius = radius_;
-    color = color_;
-    line_width = line_width_;
-    if(quadric == nullptr) {
-      quadric = gluNewQuadric();
-      gluQuadricDrawStyle(quadric, GLU_FILL);
+  CircleObject(float x_, float y_) : DrawObject(x_, y_) {
+    this->line_width = g_line_width;
+    this->color = RGBAColor(g_now_color);
+    this->full_mode = is_full_mode;
+    if(this->quadric == nullptr) {
+      this->quadric = gluNewQuadric();
     }
   }
   void draw() override {
+    float innerRadius = full_mode ? 0 : radius - line_width;
     glColor3f(color.r, color.g, color.b);
-    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    gluQuadricDrawStyle(quadric, GLU_FILL);
     glPushMatrix();
     glTranslatef(x, y, 0.0);
-    gluDisk(quadric, 0.0, radius, 100, 100);
+    gluDisk(quadric, innerRadius, radius, 50, 1);
     glPopMatrix();
+  }
+  void addPoint(float x, float y) override {
+    radius = sqrt(pow(x - this->x, 2) + pow(y - this->y, 2));
+    radius = PaintBoard::getCanDrawRange(this->x, this->y, radius);
   }
 };

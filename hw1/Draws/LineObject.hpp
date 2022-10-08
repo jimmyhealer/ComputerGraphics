@@ -4,16 +4,13 @@ protected:
   float line_width;
   RGBAColor color;
 public:
-  LineObject() {}
-  LineObject(
-    float x_, float y_,
-    float x2_, float y2_,
-    float line_width_,
-    RGBAColor color_) : DrawObject(x_, y_) {
-    x2 = x2_;
-    y2 = y2_;
-    color = color_;
-    line_width = line_width_;
+  LineObject(float x_, float y_): DrawObject(x_, y_) {
+    this->line_width = g_line_width;
+    this->color = RGBAColor(g_now_color);
+  }
+  void addPoint(float x, float y) override {
+    x2 = x;
+    y2 = y;
   }
   void draw() override {
     glColor3f(color.r, color.g, color.b);

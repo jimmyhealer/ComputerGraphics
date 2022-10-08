@@ -2,6 +2,7 @@ class DrawStates {
 private:
   std::vector<DrawObject*> presistence_objects;
   std::vector<DrawObject*> draw_objects;
+  DrawObject* paint_board_object;
   DrawObject* tmp_object = nullptr;
 public:
   void add(DrawObject* obj, bool is_presistence=true) {
@@ -11,24 +12,19 @@ public:
     else {
       draw_objects.push_back(obj);
     }
-    glutPostRedisplay();
     is_changed = true;
   }
   void addTmpObject(DrawObject* obj) {
     tmp_object = obj;
-    glutPostRedisplay();
     is_changed = true;
   }
   void clear() {
     draw_objects.clear();
     is_changed = true;
-    glutPostRedisplay();
   }
   void display() {
+    glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    for(DrawObject* obj : presistence_objects) {
-      obj->draw();
-    }
     for(DrawObject* obj : draw_objects) {
       obj->draw();
     }
@@ -36,7 +32,11 @@ public:
       tmp_object->draw();
       tmp_object = nullptr;
     }
+    for(DrawObject* obj : presistence_objects) {
+      obj->draw();
+    }
     glFlush();
+    glutSwapBuffers();
   }
 };
 

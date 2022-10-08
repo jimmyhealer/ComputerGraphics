@@ -69,4 +69,5 @@ public:
     }
     return false;
   }
+  void addPoint(float x, float y) override {} 
 };

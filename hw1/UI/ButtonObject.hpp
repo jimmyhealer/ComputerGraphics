@@ -1,8 +1,8 @@
 class ButtonObject: public UIObject {
 private:
-  StringObject text;
+  StringObject *text;
   std::function<void(ButtonObject*)> callback;
-  RGBAColor text_color = RGBAColor(0, 0, 0, 1);
+  RGBAColor text_color = RGBAColor(1, 1, 1, 1);
   bool is_clicked = false;
 public:
   ButtonObject() {};
@@ -10,13 +10,11 @@ public:
     float x_, float y_, 
     float width_, float height_, 
     std::string text_, std::function<void(ButtonObject*)> callback_,
-    RGBAColor color_) :
+    RGBAColor color_, RGBAColor text_color_=RGBAColor(1, 1, 1, 1)) :
     UIObject(x_, y_, width_, height_, color_) {
-    this->text = StringObject(
-      x_ + width_ / 2 - 4.2 * text_.size(), y_ + height_ / 2.0 - height_ / 5.0,
-      GLUT_BITMAP_9_BY_15,
-      text_, this->text_color
-    );
+    this->text = new StringObject(x_ + width_ / 2 - 4.2 * text_.size(), y_ + height_ / 2.0 - height_ / 5.0);
+    this->text->setColor(RGBAColor(text_color_));
+    this->text->update(text_);
     this->callback = callback_;
   }
   void setPos(float x_, float y_) {
@@ -34,6 +32,7 @@ public:
         glColor4f(color.r, color.g, color.b, color.a);
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
       }
+      glLineWidth(1.0);
       glBegin(GL_POLYGON);
       glVertex2f(x, y);
       glVertex2f(x + width, y);
@@ -49,7 +48,7 @@ public:
         glVertex2f(x, y + height);
         glEnd();
       }
-      text.draw();
+      text->draw();
     }
   }
   bool getIsClicked() {
@@ -74,4 +73,8 @@ public:
   void setIsClicked(int is_clicked_) {
     is_clicked = is_clicked_;
   }
+  void setTextColor(RGBAColor color_) {
+    text_color = color_;
+  }
+  void addPoint(float x, float y) override {} 
 };

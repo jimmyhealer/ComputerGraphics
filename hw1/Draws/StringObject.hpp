@@ -4,11 +4,10 @@ protected:
   std::string str;
   RGBAColor color;
 public:
-  StringObject() {}
-  StringObject(float x_, float y_, void *font_, std::string str_, RGBAColor color_): DrawObject(x_, y_) {
-    font = font_;
-    str = str_;
-    color = color_;
+  StringObject(float x_, float y_): DrawObject(x_, y_) {
+    this->font = GLUT_BITMAP_9_BY_15;
+    this->str = "";
+    this->color = RGBAColor(g_now_color);
   }
   void update(std::string str_) {
     str = str_;
@@ -34,4 +33,8 @@ public:
       glutBitmapCharacter(font, str[i]);
     }
   }
+  void setColor(RGBAColor color_) {
+    color = color_;
+  }
+  void addPoint(float x, float y) override {}
 };

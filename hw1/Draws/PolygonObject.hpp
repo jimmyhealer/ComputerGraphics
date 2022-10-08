@@ -4,27 +4,9 @@ protected:
   std::vector<std::pair<float, float> > unclosed_points;
   float line_width;
   bool is_closed = false;
+  int full_mode;
   RGBAColor color;
-public:
-  PolygonObject() {}
-  PolygonObject(
-    float x, float y,
-    float line_width_,
-    RGBAColor color_) : DrawObject(0.0, 0.0) {
-    unclosed_points.push_back({x, y});
-    color = color_;
-    line_width = line_width_;
-  }
-  void add(float x, float y, bool is_closed_=false) {
-    unclosed_points.push_back({x, y});
-    if(is_closed_) {
-      points.insert(points.end(), unclosed_points.begin(), unclosed_points.end());
-      is_closed = true;
-    }
-    is_changed = true;
-    // draw_state_presistence.display();
-  }
-  bool checkClosed(float x, float y) {
+  bool _checkClosed(float x, float y) {
     if(unclosed_points.size() == 0) return false;
     float x0 = unclosed_points[0].first;
     float y0 = unclosed_points[0].second;
@@ -33,11 +15,31 @@ public:
     }
     return false;
   }
+public:
+  PolygonObject(float x, float y) {
+    this->line_width = g_line_width;
+    this->color = RGBAColor(g_now_color);
+    this->full_mode = is_full_mode ? GL_FILL : GL_LINE;
+    this->addPoint(x, y);
+  }
+  void addPoint(float x, float y) {
+    if(!_checkClosed(x, y)) {
+      unclosed_points.push_back({x, y});
+    }
+    else {
+      is_closed = true;
+      points = unclosed_points;
+      unclosed_points.clear();   
+    }
+  }
+  bool isClosed() {
+    return is_closed;
+  }
   void draw() override {
     glColor3f(color.r, color.g, color.b);
     glLineWidth(line_width);
     if(is_closed) {
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      glPolygonMode(GL_FRONT_AND_BACK, full_mode);
       glBegin(GL_POLYGON);
       for(auto point : points) {
         glVertex2f(point.first, point.second);
