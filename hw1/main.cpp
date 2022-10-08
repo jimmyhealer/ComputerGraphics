@@ -4,10 +4,11 @@ void mouseCallback(int button, int state, int x, int y) {
   y = window_height - y;
   if(button != GLUT_LEFT_BUTTON) return;
 
-  if(state == GLUT_DOWN)
-    NavBarPlane->isClickItem(x, y);
-  if(!PaintBoard::isInside(x, y) && state == GLUT_DOWN)
+  if(!PaintBoard::isInside(x, y) && state == GLUT_DOWN){
+    NavBarPlane->isClickItem(x, y, false);
     leftNavPlane->isClickItem(x, y);
+    ToolBarPlane->isClickItem(x, y);
+  }
 
   if(draw_mode != DRAW_MODE::NONE && state == GLUT_DOWN && PaintBoard::isInside(x, y)) {
     is_motion = false;
@@ -249,40 +250,126 @@ void initData() {
 
 
   NavBarPlane = new PlaneObject(
-    0.0, window_height - 45, window_width, 45, RGBAColor(80.0 / 255,  80.0 / 255,  80.0 / 255,  1.0));
+    0.0, window_height - 40, window_width, 40, RGBAColor(80.0 / 255,  80.0 / 255,  80.0 / 255,  1.0));
   draw_state_presistence.add(NavBarPlane, true);
 
-  NavBarPlane->addItem(
-    new ButtonObject(
-      0.0, window_height - 45, 120.0, 45.0, 
-      "File",
-      [](ButtonObject *self) -> void {
-        is_open_file_menu = !is_open_file_menu;
-        fileMenuPlane->setVisibility(is_open_file_menu);
-      },
-      RGBAColor(COLOR::BLACK)      
-    )
-  );
+  {
+    NavBarPlane->addItem(
+      new ButtonObject(
+        0.0, window_height - 40, 120.0, 40.0, 
+        "Save",
+        [](ButtonObject *self) -> void {
+        },
+        RGBAColor(COLOR::BLACK)      
+      )
+    );
 
-  fileMenuPlane = new PlaneObject(
-    0.0, window_height - 200, 120.0, 155.0, RGBAColor(80.0 / 255,  80.0 / 255,  80.0 / 255,  1.0));
-  fileMenuPlane->setVisibility(false);
-  draw_state_presistence.add(fileMenuPlane, false);
+    NavBarPlane->addItem(
+      new ButtonObject(
+        120.0, window_height - 40, 120.0, 40.0, 
+        "Clear",
+        [](ButtonObject *self) -> void {
+          draw_state_presistence.clear();
+        },
+        RGBAColor(COLOR::BLACK)      
+      )
+    );
 
-  fileMenuPlane->addItem(
-    new ButtonObject(
-      0.0, window_height - 80, 120.0, 35.0, 
-      "New",
-      [](ButtonObject *self) -> void {
-        draw_state_presistence.clear();
-      },
-      RGBAColor(COLOR::BLACK)      
-    )
-  );
+    NavBarPlane->addItem(
+      new ButtonObject(
+        240.0, window_height - 40, 120.0, 40.0, 
+        "Undo",
+        [](ButtonObject *self) -> void {
+          draw_state_presistence.undo();
+        },
+        RGBAColor(COLOR::BLACK)      
+      )
+    );
+
+    NavBarPlane->addItem(
+      new ButtonObject(
+        360.0, window_height - 40, 120.0, 40.0, 
+        "Redo",
+        [](ButtonObject *self) -> void {
+          draw_state_presistence.redo();
+        },
+        RGBAColor(COLOR::BLACK)      
+      )
+    );
+
+    NavBarPlane->addItem(
+      new ButtonObject(
+        window_width - 120, window_height - 40, 120.0, 40.0, 
+        "Quit",
+        [](ButtonObject *self) -> void {
+          exit(0);
+        },
+        RGBAColor(COLOR::BLACK)      
+      )
+    );
+  }
 
   ToolBarPlane = new PlaneObject(
-    0.0, window_height - 90, window_width, 45, RGBAColor(204.0 / 255,  204.0 / 255,  204.0 / 255,  1.0));
+    0.0, window_height - 90, window_width, 50, RGBAColor(204.0 / 255,  204.0 / 255,  204.0 / 255,  1.0));
   draw_state_presistence.add(ToolBarPlane, true);
+
+  {
+    ToolBarPlane->addItem(
+      new TextObject(
+        125.0, window_height - 90 + 20,
+        "Line Width:",
+        RGBAColor(COLOR::BLACK)
+      )
+    );
+
+    ToolBarPlane->addItem(
+      new ButtonObject(
+        230.0, window_height - 90 + 9, 30.0, 30.0, 
+        "-",
+        [](ButtonObject *self) -> void {
+          if (g_line_width > 1) {
+            g_line_width--;
+            text_line_width->update(std::to_string((int)g_line_width));
+          }
+        },
+        RGBAColor(COLOR::BLACK),
+        RGBAColor(COLOR::BLACK)
+      )
+    );
+
+    text_line_width = new TextObject(
+      270.0, window_height - 90 + 20,
+      std::to_string((int)g_line_width),
+      RGBAColor(COLOR::BLACK)
+    );
+
+    ToolBarPlane->addItem(text_line_width);
+
+    ToolBarPlane->addItem(
+      new ButtonObject(
+        290.0, window_height - 90 + 9, 30.0, 30.0, 
+        "+",
+        [](ButtonObject *self) -> void {
+          if(g_line_width < 8){
+            g_line_width++;
+            text_line_width->update(std::to_string((int)g_line_width));
+          }
+        },
+        RGBAColor(COLOR::BLACK),
+        RGBAColor(COLOR::BLACK) 
+      )
+    );
+
+    ToolBarPlane->addItem(
+      new TextObject(
+        350.0, window_height - 90 + 20,
+        "Color:",
+        RGBAColor(COLOR::BLACK)
+      )
+    );
+
+    // ToolBarPlane->addItem();
+  }
 
   is_changed = true;
 }
@@ -313,8 +400,8 @@ void windowReshape(int _new_width, int _new_height) {
   glLoadIdentity();
   PaintBoard::update(window_width, window_height);
   leftNavPlane->update(120.0, window_height - 90);
-  NavBarPlane->update(0.0, window_height - 45, window_width, 45);
-  ToolBarPlane->update(0.0, window_height - 90, window_width, 45);
+  NavBarPlane->update(0.0, window_height - 40, window_width, 40);
+  ToolBarPlane->update(0.0, window_height - 90, window_width, 50);
   draw_state_presistence.display();
 }
 
