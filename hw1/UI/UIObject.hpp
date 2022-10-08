@@ -3,6 +3,7 @@ protected:
   float width, height;
   bool is_visible;
   bool is_enabled;
+  bool is_clicked;
   RGBAColor color;
 public:
   UIObject() {};
@@ -17,6 +18,7 @@ public:
     this->color = color_;
     this->is_visible = true;
     this->is_enabled = true;
+    this->is_clicked = false;
   }
   void enable() {
     is_enabled = true;
@@ -42,5 +44,22 @@ public:
   bool isEnabled() {
     return is_enabled;
   }
+  bool getIsClicked() {
+    return is_clicked;
+  }
+  bool isInside(int x, int y) {
+    bool res = (
+      x >= this->x && x <= this->x + this->width &&
+      y >= this->y && y <= this->y + this->height
+    );
+    return res;
+  }
+  void hover() {
+    color = RGBAColor(0.5, 0.5, 0.5, 1.0);
+  }
+   void setIsClicked(int is_clicked_) {
+    is_clicked = is_clicked_;
+  }
   virtual void draw() = 0;
+  virtual void click() = 0;
 };

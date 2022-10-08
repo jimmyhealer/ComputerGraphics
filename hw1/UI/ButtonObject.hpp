@@ -3,7 +3,6 @@ private:
   StringObject *text;
   std::function<void(ButtonObject*)> callback;
   RGBAColor text_color = RGBAColor(1, 1, 1, 1);
-  bool is_clicked = false;
 public:
   ButtonObject() {};
   ButtonObject(
@@ -51,30 +50,11 @@ public:
       text->draw();
     }
   }
-  bool getIsClicked() {
-    return is_clicked;
-  }
-  bool isInside(int x, int y) {
-    bool res = (
-      x >= this->x && x <= this->x + this->width &&
-      y >= this->y && y <= this->y + this->height
-    );
-    return res;
-  }
-  void hover() {
-    color = RGBAColor(0.5, 0.5, 0.5, 1.0);
-  }
-  void click() {
+  void click() override {
     if (isEnabled()) {
       callback(this);
       is_changed = true;
     }
-  }
-  void setIsClicked(int is_clicked_) {
-    is_clicked = is_clicked_;
-  }
-  void setTextColor(RGBAColor color_) {
-    text_color = color_;
-  }
+  } 
   void addPoint(float x, float y) override {} 
 };

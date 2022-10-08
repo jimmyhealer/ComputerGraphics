@@ -1,6 +1,6 @@
 class PlaneObject : public UIObject {
 private:
-  std::vector<ButtonObject*> item_objects;
+  std::vector<UIObject*> item_objects;
   int item_is_clicked = -1;
 public:
   PlaneObject() {};
@@ -8,7 +8,7 @@ public:
     float x_, float y_, 
     float width_, float height_, RGBAColor color_) :
     UIObject(x_, y_, width_, height_, color_) {};
-  void addItem(ButtonObject* item, bool clicked=false) {
+  void addItem(UIObject* item, bool clicked=false) {
     item_objects.push_back(item);
     if(clicked) {
       item_is_clicked = item_objects.size() - 1;
@@ -51,7 +51,7 @@ public:
       item_objects[i]->draw();
     }
   }
-  bool isClickItem(int x_, int y_) {
+  bool isClickItem(int x_, int y_, bool is_clicked=true) {
     for (int i = 0; i < item_objects.size(); i++) {
       if (item_objects[i]->isInside(x_, y_)) {
         item_objects[i]->click();
@@ -59,7 +59,7 @@ public:
         return true;
       }
     }
-    item_is_clicked = -1;
+    if(!is_clicked) item_is_clicked = -1;
     return false;
   }
   bool isInsideItem(int x_, int y_) {
@@ -70,5 +70,6 @@ public:
     }
     return false;
   }
+  void click() override {}
   void addPoint(float x, float y) override {} 
 };
