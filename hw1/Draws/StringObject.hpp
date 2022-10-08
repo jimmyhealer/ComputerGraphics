@@ -9,6 +9,12 @@ public:
     this->str = "";
     this->color = RGBAColor(g_now_color);
   }
+  StringObject(float x_, float y_,
+    std::string str_, RGBAColor color_): DrawObject(x_, y_) {
+    this->font = GLUT_BITMAP_9_BY_15;
+    this->str = str_;
+    this->color = color_;
+  }
   void update(std::string str_) {
     str = str_;
     is_changed = true;
