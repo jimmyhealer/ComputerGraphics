@@ -18,6 +18,7 @@ public:
     float innerRadius = full_mode ? 0 : radius - line_width;
     glColor3f(color.r, color.g, color.b);
     gluQuadricDrawStyle(quadric, GLU_FILL);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     glPushMatrix();
     glTranslatef(x, y, 0.0);
     gluDisk(quadric, innerRadius, radius, 50, 1);
