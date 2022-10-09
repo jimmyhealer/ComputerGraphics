@@ -370,13 +370,13 @@ void initData() {
       )
     );
 
-    ToolBarPlane->addItem(
-      new ColorObject(410.0, window_height - 90 + 9, 30.0, 30.0,
+    now_color_object = new ColorObject(410.0, window_height - 90 + 9, 30.0, 30.0,
       [&](ColorObject *self) -> void {
         PalettePlane->toggleVisibility();
         is_open_palette_plane = PalettePlane->isVisible();
-      })
-    );
+      });
+
+    ToolBarPlane->addItem(now_color_object);
 
     ToolBarPlane->addItem(
       new TextObject(
@@ -410,7 +410,19 @@ void initData() {
 
   {
     PalettePlane->addItem(
-      new PaletteTriangleObject(350, window_height - 245)
+      new PaletteTriangleObject(350, window_height - 235,
+      [&](PaletteTriangleObject *self, float x, float y) -> void {
+        float r, g, b;
+        std::function<float(std::pair<float, float>, std::pair<float, float>)> getDis = 
+          [](std::pair<float, float> a, std::pair<float, float> b) -> float {
+            return sqrt(pow(a.first - b.first, 2) + pow(a.second - b.second, 2));
+          };
+        b = 1 - max(getDis(self->vertices_pair[2], {x, y}) - 75 * sqrt(3) / 2, 0.0) / 75 * sqrt(3) / 2;
+        g = 1 - max(getDis(self->vertices_pair[1], {x, y}) - 75 * sqrt(3) / 2, 0.0) / 75 * sqrt(3) / 2;
+        r = 1 - max(getDis(self->vertices_pair[0], {x, y}) - 75 * sqrt(3) / 2, 0.0) / 75 * sqrt(3) / 2;
+        g_now_color_rgba = RGBAColor(r, g, b, 1.0);
+        now_color_object->setColor(g_now_color_rgba);
+      })
     );
   }
   PalettePlane->setVisibility(false);
