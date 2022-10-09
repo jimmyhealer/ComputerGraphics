@@ -3,7 +3,7 @@ std::function<void(ColorObject*)> callback;
 public:
   ColorObject() {}
   ColorObject(float x_, float y_, float width_, float height_, std::function<void(ColorObject*)> callback_) :
-    UIObject(x_, y_, width_, height_, RGBAColor(g_now_color)) {
+    UIObject(x_, y_, width_, height_, g_now_color_rgba) {
       this->callback = callback_;
     }
   void draw() override {

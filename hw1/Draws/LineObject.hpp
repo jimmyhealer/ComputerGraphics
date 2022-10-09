@@ -6,7 +6,7 @@ protected:
 public:
   LineObject(float x_, float y_): DrawObject(x_, y_) {
     this->line_width = g_line_width;
-    this->color = RGBAColor(g_now_color);
+    this->color = g_now_color_rgba;
   }
   void addPoint(float x, float y) override {
     x2 = x;

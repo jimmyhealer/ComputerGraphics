@@ -23,6 +23,10 @@ typedef int menu_id;
 enum DRAW_MODE {NONE, LINE, CIRCLE, TRIANGLE, POLYGON, TEXT};
 enum COLOR {RED, GREEN, BLUE, BLACK, WHITE};
 enum MORE_MENU {CLEAR, QUIT, FULLMODE};
+
+#include "Utility/PaintBoard.hpp"
+#include "Utility/RGBAColor.hpp"
+
 int window_height = 512;
 int window_width = 512;
 int draw_mode = DRAW_MODE::NONE;
@@ -44,9 +48,8 @@ int origin_window_width = window_width, origin_window_height = window_height;
 std::string draw_mode_str[] = {"None", "Line", "Circle", "Triangle", "Polygon", "Text"};
 std::string color_str[] = {"Red", "Green", "Blue", "Black", "White"};
 std::string more_menu_str[] = {"Clear", "Quit", "Fill Mode"};
+RGBAColor g_now_color_rgba = RGBAColor(g_now_color);
 
-#include "Utility/PaintBoard.hpp"
-#include "Utility/RGBAColor.hpp"
 #include "Draws/DrawType.hpp"
 #include "DrawStates.hpp"
 #include "UI/UIType.hpp"
@@ -62,4 +65,4 @@ DrawStatePresistence draw_state_presistence;
 DrawObject *now_draw_object = nullptr;
 
 TextObject *text_line_width;
-ColorObject *now_color;
+ColorObject *now_color_object;

@@ -18,7 +18,7 @@ protected:
 public:
   PolygonObject(float x, float y) {
     this->line_width = g_line_width;
-    this->color = RGBAColor(g_now_color);
+    this->color = g_now_color_rgba;
     this->fill_mode = is_full_mode ? GL_FILL : GL_LINE;
     this->addPoint(x, y);
   }

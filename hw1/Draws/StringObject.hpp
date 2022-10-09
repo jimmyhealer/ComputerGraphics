@@ -7,7 +7,7 @@ public:
   StringObject(float x_, float y_): DrawObject(x_, y_) {
     this->font = GLUT_BITMAP_9_BY_15;
     this->str = "";
-    this->color = RGBAColor(g_now_color);
+    this->color = g_now_color_rgba;
   }
   StringObject(float x_, float y_,
     std::string str_, RGBAColor color_): DrawObject(x_, y_) {
