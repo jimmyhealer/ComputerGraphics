@@ -517,6 +517,9 @@ void keyboardEvent(unsigned char key, int x, int y) {
   }
   else if(is_insert_mode == 0){
     switch(key) {
+      case 14: //ctrl + n
+        draw_state_presistence.clear();
+        break;
       case 26: // ctrl + z
         draw_state_presistence.undo();
         break;
@@ -530,6 +533,7 @@ void keyboardEvent(unsigned char key, int x, int y) {
       case 19: // ctrl + s
         PaintBoard::save();
         break;
+      case 17:
       case 'q':
       case 'Q':
         exit(0);
