@@ -63,6 +63,9 @@ public:
   void setColor(RGBAColor color) {
     this->color = color;
   }
+  RGBAColor getColor() {
+    return color;
+  }
   virtual void draw() = 0;
   virtual void click(float x=0, float y=0) = 0;
 };

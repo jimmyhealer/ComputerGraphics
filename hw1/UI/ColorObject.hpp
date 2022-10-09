@@ -6,6 +6,11 @@ public:
     UIObject(x_, y_, width_, height_, g_now_color_rgba) {
       this->callback = callback_;
     }
+  ColorObject(float x_, float y_, float width_, float height_,
+   std::function<void(ColorObject*)> callback_, RGBAColor color_) :
+    UIObject(x_, y_, width_, height_, color_) {
+      this->callback = callback_;
+    }
   void draw() override {
     glColor3f(color.r, color.g, color.b);
     glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

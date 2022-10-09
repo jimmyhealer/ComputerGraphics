@@ -67,7 +67,7 @@ void motionCallback(int x, int y) {
 void passiveMotionCallback(int x, int y) {
   y = window_height - y;
   if(abs(x - pos_x) + abs(y - pos_y) < 4) return;
-  if(PaintBoard::isInside(x, y) && draw_mode != DRAW_MODE::NONE) {
+  if(PaintBoard::isInside(x, y) && draw_mode != DRAW_MODE::NONE && !is_open_palette_plane) {
     if(draw_mode == DRAW_MODE::TEXT) {
       glutSetCursor(GLUT_CURSOR_TEXT);
     }
@@ -423,6 +423,46 @@ void initData() {
         g_now_color_rgba = RGBAColor(r, g, b, 1.0);
         now_color_object->setColor(g_now_color_rgba);
       })
+    );
+
+    PalettePlane->addItem(
+      new ColorObject(350, window_height - 275, 30, 30,
+      [&](ColorObject *self) -> void {
+        g_now_color_rgba = self->getColor();
+        now_color_object->setColor(g_now_color_rgba);
+      },RGBAColor(COLOR::WHITE))
+    );
+
+    PalettePlane->addItem(
+      new ColorObject(380, window_height - 275, 30, 30,
+      [&](ColorObject *self) -> void {
+        g_now_color_rgba = self->getColor();
+        now_color_object->setColor(g_now_color_rgba);
+      },RGBAColor(COLOR::BLACK))
+    );
+
+    PalettePlane->addItem(
+      new ColorObject(410, window_height - 275, 30, 30,
+      [&](ColorObject *self) -> void {
+        g_now_color_rgba = self->getColor();
+        now_color_object->setColor(g_now_color_rgba);
+      },RGBAColor(COLOR::RED))
+    );
+
+    PalettePlane->addItem(
+      new ColorObject(440, window_height - 275, 30, 30,
+      [&](ColorObject *self) -> void {
+        g_now_color_rgba = self->getColor();
+        now_color_object->setColor(g_now_color_rgba);
+      },RGBAColor(COLOR::GREEN))
+    );
+
+    PalettePlane->addItem(
+      new ColorObject(470, window_height - 275, 30, 30,
+      [&](ColorObject *self) -> void {
+        g_now_color_rgba = self->getColor();
+        now_color_object->setColor(g_now_color_rgba);
+      },RGBAColor(COLOR::BLUE))
     );
   }
   PalettePlane->setVisibility(false);
