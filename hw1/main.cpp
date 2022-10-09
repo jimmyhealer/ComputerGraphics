@@ -9,6 +9,8 @@ void mouseCallback(int button, int state, int x, int y) {
     if(leftNavPlane->isClickItem(x, y)) return;
     if(ToolBarPlane->isClickItem(x, y)) return;
     if(PalettePlane->isClickItem(x, y)) return;
+    PalettePlane->setVisibility(false);
+    is_open_palette_plane = false;
     return;
   }
 
