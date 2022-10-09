@@ -21,6 +21,9 @@ public:
     this->y = window_height - y_;
     // this->text.setPos(x_ + width / 2 - 4.2 * text.getText().size(), y_ + height / 2.0 - height / 5.0);
   }
+  void updateText(std::string text_) {
+    this->text->update(text_);
+  }
   void draw() override {
     if (isVisible()) {
       if(is_clicked) {
@@ -50,7 +53,7 @@ public:
       text->draw();
     }
   }
-  void click() override {
+  void click(float x=0, float y=0) override {
     if (isEnabled()) {
       callback(this);
       is_changed = true;

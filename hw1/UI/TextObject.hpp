@@ -23,6 +23,6 @@ public:
   void setColor(RGBAColor color_) {
     color = color_;
   }
-  void click() override {}
+  void click(float x=0, float y=0) override {}
   void addPoint(float x, float y) override {}
 };
