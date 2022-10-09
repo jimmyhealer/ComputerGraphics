@@ -6,7 +6,9 @@
 #include <cmath>
 #include <functional>
 #include <fstream>
+#include <chrono>
 #include <GL/glut.h>
+#include <GL/glext.h>
 
 #define __DEBUG__
 

@@ -263,6 +263,7 @@ void initData() {
         0.0, window_height - 40, 120.0, 40.0, 
         "Save",
         [](ButtonObject *self) -> void {
+          PaintBoard::save();
         },
         RGBAColor(COLOR::BLACK)      
       )
@@ -525,6 +526,9 @@ void keyboardEvent(unsigned char key, int x, int y) {
       case 27:
         glutReshapeWindow(origin_window_width, origin_window_height);
         is_full_screen = 0;
+        break;
+      case 19: // ctrl + s
+        PaintBoard::save();
         break;
       case 'q':
       case 'Q':
