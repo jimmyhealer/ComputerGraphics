@@ -60,6 +60,9 @@ public:
    void setIsClicked(int is_clicked_) {
     is_clicked = is_clicked_;
   }
+  void setColor(RGBAColor color) {
+    this->color = color;
+  }
   virtual void draw() = 0;
   virtual void click(float x=0, float y=0) = 0;
 };
