@@ -3,3 +3,4 @@
 #include "PlaneObject.hpp"
 #include "TextObject.hpp"
 #include "ColorObject.hpp"
+#include "PaletteTriangleObject.hpp"
