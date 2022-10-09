@@ -4,10 +4,12 @@ void mouseCallback(int button, int state, int x, int y) {
   y = window_height - y;
   if(button != GLUT_LEFT_BUTTON) return;
 
-  if(!PaintBoard::isInside(x, y) && state == GLUT_DOWN){
-    NavBarPlane->isClickItem(x, y, false);
-    leftNavPlane->isClickItem(x, y);
-    ToolBarPlane->isClickItem(x, y);
+  if((is_open_palette_plane || !PaintBoard::isInside(x, y)) && state == GLUT_DOWN){
+    if(NavBarPlane->isClickItem(x, y, false)) return;
+    if(leftNavPlane->isClickItem(x, y)) return;
+    if(ToolBarPlane->isClickItem(x, y)) return;
+    if(PalettePlane->isClickItem(x, y)) return;
+    return;
   }
 
   if(draw_mode != DRAW_MODE::NONE && state == GLUT_DOWN && PaintBoard::isInside(x, y)) {
@@ -368,8 +370,50 @@ void initData() {
       )
     );
 
-    // ToolBarPlane->addItem();
+    ToolBarPlane->addItem(
+      new ColorObject(410.0, window_height - 90 + 9, 30.0, 30.0,
+      [&](ColorObject *self) -> void {
+        PalettePlane->toggleVisibility();
+        is_open_palette_plane = PalettePlane->isVisible();
+      })
+    );
+
+    ToolBarPlane->addItem(
+      new TextObject(
+        450.0, window_height - 90 + 20,
+        "Fill:",
+        RGBAColor(COLOR::BLACK)
+      )
+    );
+
+    ToolBarPlane->addItem(
+      new ButtonObject(
+        500.0, window_height - 90 + 9, 40.0, 30.0, 
+        "OFF",
+        [](ButtonObject *self) -> void {
+          is_full_mode = !is_full_mode;
+          if (is_full_mode) {
+            self->updateText("ON");
+          } else {
+            self->updateText("OFF");
+          }
+        },
+        RGBAColor(COLOR::BLACK),
+        RGBAColor(COLOR::BLACK) 
+      )
+    );
   }
+
+  PalettePlane = new PlaneObject(
+    325, window_height - 290, 200, 200, RGBAColor(204.0 / 255,  204.0 / 255,  204.0 / 255,  1.0));
+  draw_state_presistence.add(PalettePlane, true);
+
+  {
+    PalettePlane->addItem(
+      new PaletteTriangleObject(350, window_height - 245)
+    );
+  }
+  PalettePlane->setVisibility(false);
 
   is_changed = true;
 }
