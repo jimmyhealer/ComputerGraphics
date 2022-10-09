@@ -7,8 +7,6 @@
 #include <functional>
 #include <fstream>
 #include <GL/glut.h>
-#include <GL/glext.h>
-#include <GL/freeglut.h>
 
 #define __DEBUG__
 
@@ -37,7 +35,7 @@ bool is_full_screen = false;
 bool is_changed = true;
 bool is_mouse_down = false;
 
-bool is_open_file_menu = false;
+bool is_open_palette_plane = false;
 
 bool is_motion = false;
 
@@ -54,7 +52,7 @@ std::string more_menu_str[] = {"Clear", "Quit", "Fill Mode"};
 #include "UI/UIType.hpp"
 
 StringObject *insert_str;
-PlaneObject *leftNavPlane, *rightNavPlane, *NavBarPlane, *ToolBarPlane;
+PlaneObject *leftNavPlane, *rightNavPlane, *NavBarPlane, *ToolBarPlane, *PalettePlane;
 PolygonObject *polygon = nullptr;
 
 menu_id top_menu, draw_menu, color_menu, line_width_menu, point_size_menu, more_menu;
@@ -64,3 +62,4 @@ DrawStatePresistence draw_state_presistence;
 DrawObject *now_draw_object = nullptr;
 
 TextObject *text_line_width;
+ColorObject *now_color;
