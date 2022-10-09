@@ -5,7 +5,7 @@ int paint_board_y = 0;
 
 namespace PaintBoard {
   void update(float width, float height) {
-    paint_board_width = width - paint_board_x - 120;
+    paint_board_width = width - paint_board_x;
     paint_board_height = height - paint_board_y - 90;
   }
 
