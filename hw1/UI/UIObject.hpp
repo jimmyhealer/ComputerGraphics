@@ -47,7 +47,7 @@ public:
   bool getIsClicked() {
     return is_clicked;
   }
-  bool isInside(int x, int y) {
+  virtual bool isInside(int x, int y) {
     bool res = (
       x >= this->x && x <= this->x + this->width &&
       y >= this->y && y <= this->y + this->height
@@ -61,5 +61,5 @@ public:
     is_clicked = is_clicked_;
   }
   virtual void draw() = 0;
-  virtual void click() = 0;
+  virtual void click(float x=0, float y=0) = 0;
 };

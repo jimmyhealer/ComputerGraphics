@@ -54,7 +54,7 @@ public:
   bool isClickItem(int x_, int y_, bool is_clicked=true) {
     for (int i = 0; i < item_objects.size(); i++) {
       if (item_objects[i]->isInside(x_, y_)) {
-        item_objects[i]->click();
+        item_objects[i]->click(x_, y_);
         item_is_clicked = i;
         return true;
       }
@@ -70,6 +70,6 @@ public:
     }
     return false;
   }
-  void click() override {}
+  void click(float x=0, float y=0) override {}
   void addPoint(float x, float y) override {} 
 };
