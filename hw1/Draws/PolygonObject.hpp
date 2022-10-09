@@ -4,7 +4,7 @@ protected:
   std::vector<std::pair<float, float> > unclosed_points;
   float line_width;
   bool is_closed = false;
-  int full_mode;
+  int fill_mode;
   RGBAColor color;
   bool _checkClosed(float x, float y) {
     if(unclosed_points.size() == 0) return false;
@@ -19,7 +19,7 @@ public:
   PolygonObject(float x, float y) {
     this->line_width = g_line_width;
     this->color = RGBAColor(g_now_color);
-    this->full_mode = is_full_mode ? GL_FILL : GL_LINE;
+    this->fill_mode = is_full_mode ? GL_FILL : GL_LINE;
     this->addPoint(x, y);
   }
   void addPoint(float x, float y) {
@@ -39,7 +39,7 @@ public:
     glColor3f(color.r, color.g, color.b);
     glLineWidth(line_width);
     if(is_closed) {
-      glPolygonMode(GL_FRONT_AND_BACK, full_mode);
+      glPolygonMode(GL_FRONT_AND_BACK, fill_mode);
       glBegin(GL_POLYGON);
       for(auto point : points) {
         glVertex2f(point.first, point.second);
