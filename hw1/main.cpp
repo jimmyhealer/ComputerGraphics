@@ -18,12 +18,15 @@ void mouseCallback(int button, int state, int x, int y) {
     is_motion = false;
     switch(draw_mode) {
       case DRAW_MODE::LINE:
+        glReadPixels(0, 0, window_width, window_height, GL_RGBA, GL_UNSIGNED_BYTE, window_data);
         now_draw_object = new LineObject(x, y);
         break;
       case DRAW_MODE::CIRCLE:
+        glReadPixels(0, 0, window_width, window_height, GL_RGBA, GL_UNSIGNED_BYTE, window_data);
         now_draw_object = new CircleObject(x, y);
         break;
       case DRAW_MODE::TRIANGLE:
+        glReadPixels(0, 0, window_width, window_height, GL_RGBA, GL_UNSIGNED_BYTE, window_data);
         now_draw_object = new TriangleObject(x, y);
         break;
       case DRAW_MODE::POLYGON:

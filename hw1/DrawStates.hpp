@@ -25,15 +25,19 @@ public:
   void display() {
     glClearColor(1.0, 1.0, 1.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
-    for(DrawObject* obj : draw_objects) {
-      obj->draw();
-    }
     if(tmp_object != nullptr) {
+      glRasterPos2i(0, 0);
+      glDrawPixels(window_width, window_height, GL_RGBA, GL_UNSIGNED_BYTE, window_data);
       tmp_object->draw();
       tmp_object = nullptr;
     }
-    for(DrawObject* obj : presistence_objects) {
-      obj->draw();
+    else {
+      for(DrawObject* obj : draw_objects) {
+        obj->draw();
+      }
+      for(DrawObject* obj : presistence_objects) {
+        obj->draw();
+      }
     }
     glFlush();
     glutSwapBuffers();

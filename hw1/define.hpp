@@ -21,6 +21,7 @@ using namespace std;
 #endif
 
 typedef int menu_id;
+const int WINDOW_SIZE = 2000;
 
 enum DRAW_MODE {NONE, LINE, CIRCLE, TRIANGLE, POLYGON, TEXT};
 enum COLOR {RED, GREEN, BLUE, BLACK, WHITE};
@@ -47,6 +48,7 @@ bool is_motion = false;
 
 int pos_x, pos_y;
 int origin_window_width = window_width, origin_window_height = window_height;
+int window_data[WINDOW_SIZE * WINDOW_SIZE][4];
 std::string draw_mode_str[] = {"None", "Line", "Circle", "Triangle", "Polygon", "Text"};
 std::string color_str[] = {"Red", "Green", "Blue", "Black", "White"};
 std::string more_menu_str[] = {"Clear", "Quit", "Fill Mode"};
