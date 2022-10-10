@@ -91,13 +91,14 @@ public:
     presistence[version].display();
   }
   void undo() {
-    if(version > 0) {
+    if(now_draw_object == nullptr && version > 0) {
       version--;
+      polygon = nullptr;
       is_changed = true;
     }
   }
   void redo() {
-    if(version < presistence.size() - 1) {
+    if(polygon == nullptr && version < presistence.size() - 1) {
       version++;
       is_changed = true;
     }

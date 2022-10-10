@@ -55,18 +55,17 @@ std::string more_menu_str[] = {"Clear", "Quit", "Fill Mode"};
 RGBAColor g_now_color_rgba = RGBAColor(g_now_color);
 
 #include "Draws/DrawType.hpp"
+DrawObject *now_draw_object = nullptr;
+PolygonObject *polygon = nullptr;
+StringObject *insert_str;
+
 #include "DrawStates.hpp"
 #include "UI/UIType.hpp"
 
-StringObject *insert_str;
 PlaneObject *leftNavPlane, *rightNavPlane, *NavBarPlane, *ToolBarPlane, *PalettePlane;
-PolygonObject *polygon = nullptr;
 
 menu_id top_menu, draw_menu, color_menu, line_width_menu, point_size_menu, more_menu;
 
 DrawStatePresistence draw_state_presistence;
-
-DrawObject *now_draw_object = nullptr;
-
 TextObject *text_line_width;
 ColorObject *now_color_object;
