@@ -81,4 +81,40 @@ namespace PaintBoard {
     string filename = "save_" + std::to_string(time) + ".bmp";
     PaintBoard::SaveAsBMP(filename.c_str());
   }
+
+  // Draw the grid lines
+  void draw() {
+    glLineWidth(1);
+    glEnable(GL_BLEND);        //啟用混合狀態
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+    glDepthMask(GL_FALSE);
+    glDisable(GL_LIGHTING);
+    glColor4f(0.8, 0.8, 0.8, 0.5);
+    glBegin(GL_LINES);
+    for(int i = 0; i <= paint_board_width; i += 64) {
+      glVertex2f(paint_board_x + i, paint_board_y);
+      glVertex2f(paint_board_x + i, paint_board_y + paint_board_height);
+    }
+    for(int i = 0; i <= paint_board_height; i += 64) {
+      glVertex2f(paint_board_x, paint_board_y + i);
+      glVertex2f(paint_board_x + paint_board_width, paint_board_y + i);
+    }
+    glEnd();
+    glColor4f(0.9, 0.9, 0.9, 0.5);
+    glBegin(GL_LINES);
+    for(int i = 0; i <= paint_board_width; i += 32) {
+      if(i % 64 == 0) continue;
+      glVertex2f(paint_board_x + i, paint_board_y);
+      glVertex2f(paint_board_x + i, paint_board_y + paint_board_height);
+    }
+    for(int i = 0; i <= paint_board_height; i += 32) {
+      if(i % 64 == 0) continue;
+      glVertex2f(paint_board_x, paint_board_y + i);
+      glVertex2f(paint_board_x + paint_board_width, paint_board_y + i);
+    }
+    glDisable(GL_BLEND);
+    glEnable(GL_LIGHTING);
+    glDepthMask(GL_TRUE);
+    glEnd();
+  }
 }

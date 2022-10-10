@@ -41,6 +41,7 @@ bool is_insert_mode = false;
 bool is_full_screen = false;
 bool is_changed = true;
 bool is_mouse_down = false;
+bool is_open_grid = false;
 
 bool is_open_palette_plane = false;
 

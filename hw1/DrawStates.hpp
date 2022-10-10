@@ -30,11 +30,13 @@ public:
       glDrawPixels(window_width, window_height, GL_RGBA, GL_UNSIGNED_BYTE, window_data);
       tmp_object->draw();
       tmp_object = nullptr;
+      if(is_open_grid) PaintBoard::draw();
     }
     else {
       for(DrawObject* obj : draw_objects) {
         obj->draw();
       }
+      if(is_open_grid) PaintBoard::draw();
       for(DrawObject* obj : presistence_objects) {
         obj->draw();
       }

@@ -557,6 +557,11 @@ void keyboardEvent(unsigned char key, int x, int y) {
           glutFullScreen();
         }
         break;
+      case 'g':
+      case 'G':
+        is_open_grid = !is_open_grid;
+        is_changed = true;
+        break;
     }
   }
 }
@@ -570,7 +575,7 @@ int main(int argc, char* argv[]) {
   glutInitWindowPosition(0, 0);
   glutInitWindowSize(window_width, window_height);
 
-  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);
+  glutInitDisplayMode(GLUT_SINGLE | GLUT_RGBA);
   
   initData();
 
