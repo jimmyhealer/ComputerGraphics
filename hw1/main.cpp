@@ -482,7 +482,7 @@ void display() {
 
 void idleCallback() {
   if (is_changed) {
-    glutPostRedisplay();
+    display();
     is_changed = false;
   }
 }
